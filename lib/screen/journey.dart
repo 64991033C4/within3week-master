@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Journey extends StatelessWidget {
   final String role;
@@ -32,9 +33,16 @@ class Journey extends StatelessWidget {
         actions: [
           IconButton(
             icon: Icon(Icons.logout),
-            onPressed: () {
-              // Replace this with sign-out logic and navigation to the home page.
-              Navigator.pushReplacementNamed(context, '/');
+            onPressed: () async {
+              try {
+                await FirebaseAuth.instance.signOut();
+                Navigator.pushReplacementNamed(context, '/');
+              } catch (e) {
+                // Handle sign-out errors if necessary
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Error signing out: $e')),
+                );
+              }
             },
           ),
         ],
@@ -227,7 +235,8 @@ class _TeacherWidgetState extends State<TeacherWidget> {
             Row(
               children: [
                 Text(
-                  'Selected Date: ${_selectedDate.toLocal()}'.split(' ')[0],
+                  'Selected Date: ${_selectedDate.toLocal().toString().split(' ')[0]}',
+                  style: TextStyle(fontSize: 16),
                 ),
                 Spacer(),
                 TextButton(
