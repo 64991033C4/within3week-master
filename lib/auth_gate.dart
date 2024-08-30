@@ -45,7 +45,9 @@ class AuthGate extends StatelessWidget {
         // Check if the email ends with '@kmitl.ac.th'
         if (email.endsWith('@kmitl.ac.th')) {
           return const Journey(role: 'Student');
-        } else {
+        } else if (email.endsWith('@gmail.com')){
+          return const Journey(role: 'Teacher');
+        }else {
           return const Journey(role: 'Log inR');
         }
       },

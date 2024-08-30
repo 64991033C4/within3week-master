@@ -43,6 +43,7 @@ class Journey extends StatelessWidget {
     );
   }
 }
+
 class StudentWidget extends StatefulWidget {
   @override
   _StudentWidgetState createState() => _StudentWidgetState();
@@ -160,10 +161,102 @@ class Event {
 
   Event({required this.title, required this.description, required this.date});
 }
-class TeacherWidget extends StatelessWidget {
+
+class TeacherWidget extends StatefulWidget {
+  @override
+  _TeacherWidgetState createState() => _TeacherWidgetState();
+}
+
+class _TeacherWidgetState extends State<TeacherWidget> {
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  DateTime _selectedDate = DateTime.now();
+
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Future<void> _addEvent() async {
+    if (_formKey.currentState!.validate()) {
+      await _firestore.collection('events').add({
+        'title': _titleController.text,
+        'description': _descriptionController.text,
+        'date': Timestamp.fromDate(_selectedDate),
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Event added successfully')),
+      );
+
+      _titleController.clear();
+      _descriptionController.clear();
+      setState(() {
+        _selectedDate = DateTime.now();
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Text('Welcome asdfjlaskjdf, Teacher!', style: TextStyle(fontSize: 24));
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            TextFormField(
+              controller: _titleController,
+              decoration: InputDecoration(labelText: 'Event Title'),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter a title';
+                }
+                return null;
+              },
+            ),
+            TextFormField(
+              controller: _descriptionController,
+              decoration: InputDecoration(labelText: 'Event Description'),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter a description';
+                }
+                return null;
+              },
+            ),
+            SizedBox(height: 20),
+            Row(
+              children: [
+                Text(
+                  'Selected Date: ${_selectedDate.toLocal()}'.split(' ')[0],
+                ),
+                Spacer(),
+                TextButton(
+                  onPressed: () async {
+                    final selectedDate = await showDatePicker(
+                      context: context,
+                      initialDate: _selectedDate,
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2101),
+                    );
+                    if (selectedDate != null && selectedDate != _selectedDate) {
+                      setState(() {
+                        _selectedDate = selectedDate;
+                      });
+                    }
+                  },
+                  child: Text('Select date'),
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _addEvent,
+              child: Text('Add Event'),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
