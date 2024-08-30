@@ -48,7 +48,7 @@ class Journey extends StatelessWidget {
             onPressed: () async {
               try {
                 await FirebaseAuth.instance.signOut();
-                Navigator.pushReplacementNamed(context, '/');
+                Navigator.pushReplacementNamed(context, '/login');
               } catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('Error signing out: $e')),
@@ -202,6 +202,7 @@ class _StudentWidgetState extends State<StudentWidget> {
 }
 
 // TeacherWidget Class
+// TeacherWidget Class
 class TeacherWidget extends StatefulWidget {
   @override
   _TeacherWidgetState createState() => _TeacherWidgetState();
@@ -240,11 +241,12 @@ class _TeacherWidgetState extends State<TeacherWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
       child: Form(
         key: _formKey,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextFormField(
               controller: _titleController,
