@@ -17,25 +17,27 @@ class AuthGate extends StatelessWidget {
           return SignInScreen(
             providers: [
               EmailAuthProvider(),
-              GoogleProvider(clientId: "466200760101-7ekla5g4b8oooql11qj03a1cjh6h4udh.apps.googleusercontent.com"),
+              // Uncomment and configure GoogleProvider if you want to support Google sign-in
+              // GoogleProvider(clientId: "YOUR_CLIENT_ID"),
             ],
             subtitleBuilder: (context, action) {
               return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: action == AuthAction.signIn
                     ? const Text('Welcome to FlutterFire, please sign in!')
-                    : const Text('Welcome to Flutterfire, please sign up!'),
+                    : const Text('Welcome to FlutterFire, please register!'),
               );
             },
             footerBuilder: (context, action) {
               return const Padding(
                 padding: EdgeInsets.only(top: 16),
                 child: Text(
-                  'By signing in, you agree to our terms and conditions.',
+                  'By signing in or registering, you agree to our terms and conditions.',
                   style: TextStyle(color: Colors.grey),
                 ),
               );
             },
+            // Optional: Customize additional properties if needed
           );
         }
 
@@ -47,8 +49,8 @@ class AuthGate extends StatelessWidget {
           return const Journey(role: 'Student');
         } else if (email.endsWith('@gmail.com')){
           return const Journey(role: 'Teacher');
-        }else {
-          return const Journey(role: 'Log inR');
+        } else {
+          return const Journey(role: 'Other');
         }
       },
     );

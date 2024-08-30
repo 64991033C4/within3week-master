@@ -3,6 +3,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+// Main Journey Class
 class Journey extends StatelessWidget {
   final String role;
 
@@ -10,11 +11,14 @@ class Journey extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+    final userEmail = user?.email ?? 'Guest';
+
     Widget roleSpecificWidget;
 
     switch (role) {
       case 'Student':
-        roleSpecificWidget = StudentWidget();
+        roleSpecificWidget = StudentWidget(userEmail: userEmail);
         break;
       case 'Teacher':
         roleSpecificWidget = TeacherWidget();
@@ -23,13 +27,21 @@ class Journey extends StatelessWidget {
         roleSpecificWidget = AnonymousWidget();
         break;
       default:
-        roleSpecificWidget =
-            DefaultWidget(); // Fallback in case of an unknown role
+        roleSpecificWidget = DefaultWidget(); // Fallback in case of an unknown role
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('$role Journey'),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('$role Journey'),
+            Text(
+              userEmail,
+              style: TextStyle(fontSize: 14, fontStyle: FontStyle.italic),
+            ),
+          ],
+        ),
         actions: [
           IconButton(
             icon: Icon(Icons.logout),
@@ -38,7 +50,6 @@ class Journey extends StatelessWidget {
                 await FirebaseAuth.instance.signOut();
                 Navigator.pushReplacementNamed(context, '/');
               } catch (e) {
-                // Handle sign-out errors if necessary
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('Error signing out: $e')),
                 );
@@ -52,7 +63,12 @@ class Journey extends StatelessWidget {
   }
 }
 
+// StudentWidget Class
 class StudentWidget extends StatefulWidget {
+  final String userEmail;
+
+  const StudentWidget({Key? key, required this.userEmail}) : super(key: key);
+
   @override
   _StudentWidgetState createState() => _StudentWidgetState();
 }
@@ -65,15 +81,36 @@ class _StudentWidgetState extends State<StudentWidget> {
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  String? _studentRoom;
+
   @override
   void initState() {
     super.initState();
     _calendarFormat = CalendarFormat.month;
     _selectedEvents = ValueNotifier([]);
+    _fetchStudentRoom(); // Fetch student room information
     _fetchEventsForDay(_selectedDay); // Fetch events initially
   }
 
+  Future<void> _fetchStudentRoom() async {
+    final snapshot = await _firestore
+        .collection('Students')
+        .where('email', isEqualTo: widget.userEmail)
+        .limit(1)
+        .get();
+
+    if (snapshot.docs.isNotEmpty) {
+      final data = snapshot.docs.first.data();
+      setState(() {
+        _studentRoom = data['room'];
+      });
+      _fetchEventsForDay(_selectedDay); // Fetch events after getting the room
+    }
+  }
+
   Future<void> _fetchEventsForDay(DateTime day) async {
+    if (_studentRoom == null) return;
+
     final startOfDay = DateTime(day.year, day.month, day.day);
     final endOfDay = DateTime(day.year, day.month, day.day, 23, 59, 59);
 
@@ -81,6 +118,7 @@ class _StudentWidgetState extends State<StudentWidget> {
         .collection('events')
         .where('date', isGreaterThanOrEqualTo: startOfDay)
         .where('date', isLessThanOrEqualTo: endOfDay)
+        .where('room', isEqualTo: _studentRoom)
         .get();
 
     final events = snapshot.docs.map((doc) {
@@ -88,6 +126,7 @@ class _StudentWidgetState extends State<StudentWidget> {
       return Event(
         title: data['title'] ?? '',
         description: data['description'] ?? '',
+        room: data['room'] ?? '',
         date: (data['date'] as Timestamp).toDate(),
       );
     }).toList();
@@ -149,7 +188,7 @@ class _StudentWidgetState extends State<StudentWidget> {
                 children: events.map((event) {
                   return ListTile(
                     title: Text(event.title),
-                    subtitle: Text(event.description),
+                    subtitle: Text('${event.description}\nRoom: ${event.room}'),
                     leading: Icon(Icons.event),
                   );
                 }).toList(),
@@ -162,14 +201,7 @@ class _StudentWidgetState extends State<StudentWidget> {
   }
 }
 
-class Event {
-  final String title;
-  final String description;
-  final DateTime date;
-
-  Event({required this.title, required this.description, required this.date});
-}
-
+// TeacherWidget Class
 class TeacherWidget extends StatefulWidget {
   @override
   _TeacherWidgetState createState() => _TeacherWidgetState();
@@ -179,6 +211,7 @@ class _TeacherWidgetState extends State<TeacherWidget> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _roomController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -188,6 +221,7 @@ class _TeacherWidgetState extends State<TeacherWidget> {
       await _firestore.collection('events').add({
         'title': _titleController.text,
         'description': _descriptionController.text,
+        'room': _roomController.text,
         'date': Timestamp.fromDate(_selectedDate),
       });
 
@@ -197,6 +231,7 @@ class _TeacherWidgetState extends State<TeacherWidget> {
 
       _titleController.clear();
       _descriptionController.clear();
+      _roomController.clear();
       setState(() {
         _selectedDate = DateTime.now();
       });
@@ -227,6 +262,16 @@ class _TeacherWidgetState extends State<TeacherWidget> {
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Please enter a description';
+                }
+                return null;
+              },
+            ),
+            TextFormField(
+              controller: _roomController,
+              decoration: InputDecoration(labelText: 'Room'),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter a room';
                 }
                 return null;
               },
@@ -269,6 +314,7 @@ class _TeacherWidgetState extends State<TeacherWidget> {
   }
 }
 
+// AnonymousWidget Class
 class AnonymousWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -276,9 +322,25 @@ class AnonymousWidget extends StatelessWidget {
   }
 }
 
+// DefaultWidget Class
 class DefaultWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text('Welcome to the Journey!', style: TextStyle(fontSize: 24));
   }
+}
+
+// Event Class
+class Event {
+  final String title;
+  final String description;
+  final String room;
+  final DateTime date;
+
+  Event({
+    required this.title,
+    required this.description,
+    required this.room,
+    required this.date,
+  });
 }
