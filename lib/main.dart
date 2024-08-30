@@ -1,8 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'intro_page.dart'; // Import the IntroPage class
 import 'login_page.dart';
-import 'register_page.dart'; // Import the RegisterPage class
-import 'screen/journey.dart'; // Import the Journey class
+import 'register_page.dart';
+import 'screen/journey.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,10 +19,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LoginPage(), // Start with the LoginPage
+      initialRoute: '/intro', // Set initial route
       routes: {
-        '/register': (context) => RegisterPage(), // Add route for the registration page
-        '/journey': (context) => Journey(role: 'Anonymous'), // Default route for Journey
+        '/intro': (context) => IntroPage(), // Add route for IntroPage
+        '/login': (context) => LoginPage(),
+        '/register': (context) => RegisterPage(),
+        '/journey': (context) => Journey(role: 'Anonymous'),
       },
     );
   }
