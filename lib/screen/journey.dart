@@ -212,17 +212,26 @@ class _TeacherWidgetState extends State<TeacherWidget> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _roomController = TextEditingController();
+  String? _selectedRoom;
+
   DateTime _selectedDate = DateTime.now();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  final List<String> _rooms = [
+    'C1/1', 'C1/2', 'M1/1', 'M1/2', 
+    'C2/1', 'C2/2', 'M2/1', 'M2/2', 
+    'C3/1', 'C3/2', 'M3/1', 'M3/2', 
+    'C4/1', 'C4/2', 'M4/1', 'M4/2', 
+    'M5/1', 'M5/2'
+  ];
 
   Future<void> _addEvent() async {
     if (_formKey.currentState!.validate()) {
       await _firestore.collection('events').add({
         'title': _titleController.text,
         'description': _descriptionController.text,
-        'room': _roomController.text,
+        'room': _selectedRoom,
         'date': Timestamp.fromDate(_selectedDate),
       });
 
@@ -232,8 +241,8 @@ class _TeacherWidgetState extends State<TeacherWidget> {
 
       _titleController.clear();
       _descriptionController.clear();
-      _roomController.clear();
       setState(() {
+        _selectedRoom = _rooms[0]; // Reset to default value
         _selectedDate = DateTime.now();
       });
     }
@@ -268,12 +277,24 @@ class _TeacherWidgetState extends State<TeacherWidget> {
                 return null;
               },
             ),
-            TextFormField(
-              controller: _roomController,
+            SizedBox(height: 20),
+            DropdownButtonFormField<String>(
+              value: _selectedRoom,
               decoration: InputDecoration(labelText: 'Room'),
+              items: _rooms.map((room) {
+                return DropdownMenuItem<String>(
+                  value: room,
+                  child: Text(room),
+                );
+              }).toList(),
+              onChanged: (value) {
+                setState(() {
+                  _selectedRoom = value!;
+                });
+              },
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Please enter a room';
+                  return 'Please select a room';
                 }
                 return null;
               },
