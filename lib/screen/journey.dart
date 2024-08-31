@@ -95,7 +95,7 @@ class _StudentWidgetState extends State<StudentWidget> {
   Future<void> _fetchStudentRoom() async {
     final snapshot = await _firestore
         .collection('Students')
-        .where('email', isEqualTo: widget.userEmail)
+        .where('email', isEqualTo: widget.userEmail.toLowerCase())
         .limit(1)
         .get();
 

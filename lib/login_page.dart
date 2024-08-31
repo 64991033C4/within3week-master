@@ -25,16 +25,17 @@ class _LoginPageState extends State<LoginPage> {
       final password = _passwordController.text;
 
       try {
+        // authen
         final UserCredential userCredential =
             await _auth.signInWithEmailAndPassword(
-          email: email,
+          email: email, // "CHATMETHAR" == "chatmethar"
           password: password,
         );
 
         // Retrieve the role from Firestore
         final userDoc = await _firestore
             .collection('Students')
-            .where('email', isEqualTo: email)
+            .where('email', isEqualTo: email.toLowerCase()) // "CHATMETHAR" != "chatmethar"
             .limit(1)
             .get();
 
@@ -48,9 +49,12 @@ class _LoginPageState extends State<LoginPage> {
               .get();
           if (teacherDoc.docs.isNotEmpty) {
             _role = 'Teacher';
-          } else {
-            _role = 'Anonymous';
           }
+        }
+
+        if (_role == 'Anonymous') {
+          // Handle the error when no role is found
+          throw Exception('User role not found. Please contact support.');
         }
 
         setState(() {
