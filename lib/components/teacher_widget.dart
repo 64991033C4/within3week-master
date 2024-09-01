@@ -19,6 +19,7 @@ class _TeacherWidgetState extends State<TeacherWidget> {
   DateTime _selectedDate = DateTime.now();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final firestore = FirebaseFirestore.instance;
 
   final List<String> _rooms = [
     'C1/1', 'C1/2', 'M1/1', 'M1/2', 
@@ -29,13 +30,20 @@ class _TeacherWidgetState extends State<TeacherWidget> {
   ];
 
   Future<void> _addEvent() async {
+
+    final userDoc = await firestore
+      .collection('users')
+      .where('email', isEqualTo: widget.userEmail)
+      .limit(1)
+      .get();
+
     if (_formKey.currentState!.validate()) {
       await _firestore.collection('events').add({
         'title': _titleController.text,
         'description': _descriptionController.text,
         'room': _selectedRoom,
         'date': Timestamp.fromDate(_selectedDate),
-        'creator': widget.userEmail
+        'creator': userDoc.docs.first.id
       });
 
       ScaffoldMessenger.of(context).showSnackBar(

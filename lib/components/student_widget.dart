@@ -61,16 +61,24 @@ class _StudentWidgetState extends State<StudentWidget> {
         .where('room', isEqualTo: _studentRoom)
         .get();
 
-    final events = snapshot.docs.map((doc) {
+
+    final events = await Future.wait(snapshot.docs.map((doc) async {
       final data = doc.data();
+
+      final creatorDoc = await _firestore
+        .collection('users')
+        .doc(data['creator'])
+        .get();
+      final creatorName = creatorDoc.exists ? creatorDoc.data()!['name'] ?? 'Loading...' : 'Loading...';
+
       return Event(
         title: data['title'] ?? '',
         description: data['description'] ?? '',
         room: data['room'] ?? '',
         date: (data['date'] as Timestamp).toDate(),
-        creator: data['creator'] ?? ''
+        creator: creatorName ?? ''
       );
-    }).toList();
+    }).toList());
 
     setState(() {
       _selectedEvents.value = events;
@@ -128,15 +136,49 @@ class _StudentWidgetState extends State<StudentWidget> {
             builder: (context, events, _) {
               return ListView(
                 children: events.map((event) {
-                  return ListTile(
-                    title: Text(event.title),
-                    subtitle: Text('${event.description}\nRoom: ${event.room}'),
-                    leading: Icon(Icons.event),
+                  return Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    elevation: 2,
+                    margin:
+                        EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0),
+                    child: ListTile(
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 4.0, horizontal: 12.0),
+                      title: Text(
+                        event.title,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 16),
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            event.description,
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          Text(
+                            '${event.creator}',
+                            style: TextStyle(color: Colors.grey[600]),
+                          ),
+                        ],
+                      ),
+                      leading: CircleAvatar(
+                        child: Icon(Icons.event),
+                        backgroundColor: Theme.of(context).primaryColor,
+                        foregroundColor: Colors.white,
+                      ),
+                      onTap: () {
+                        // Empty function for now
+                      },
+                    ),
                   );
                 }).toList(),
               );
             },
           ),
+
         ),
       ],
     );
