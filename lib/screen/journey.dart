@@ -69,14 +69,20 @@ class _JourneyState extends State<Journey> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+            icon: Icon(Icons.home),
+            onPressed: () {
+              Navigator.pushReplacementNamed(context, '/intro');
+            },
+          ),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('$_role Journey'),
-            Text(
+            Center(child: Text('$_role')),
+            Center(child: Text(
               _userEmail,
               style: TextStyle(fontSize: 14, fontStyle: FontStyle.italic),
-            ),
+            ),)
           ],
         ),
         actions: [
