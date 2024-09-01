@@ -32,36 +32,24 @@ class _JourneyState extends State<Journey> {
 
       final firestore = FirebaseFirestore.instance;
 
-      final studentDoc = await firestore
-          .collection('Students')
+      final userDoc = await firestore
+          .collection('users')
           .where('email', isEqualTo: email)
           .limit(1)
           .get();
 
-      if (studentDoc.docs.isNotEmpty) {
+      if (userDoc.docs.isNotEmpty) {
         setState(() {
-          _role = 'Student';
+          _role = userDoc.docs.first.data()['role'] ?? 'Anonymous'; // how to get key role in this doc
         });
       } else {
-        final teacherDoc = await firestore
-            .collection('Teachers')
-            .where('email', isEqualTo: email)
-            .limit(1)
-            .get();
-
-        if (teacherDoc.docs.isNotEmpty) {
-          setState(() {
-            _role = 'Teacher';
-          });
-        } else {
-          setState(() {
-            _role = 'Anonymous';
-          });
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-                content: Text('User role not found. Please contact support.')),
-          );
-        }
+        setState(() {
+          _role = 'Anonymous';
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text('User role not found. Please contact support.')),
+        );
       }
     }
   }

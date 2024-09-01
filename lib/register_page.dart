@@ -41,6 +41,7 @@ class _RegisterPageState extends State<RegisterPage> {
         Map<String, dynamic> userData = {
           'email': email,
           'name': name,
+          'role': _selectedRole,
         };
 
         if (_selectedRole == 'Student' && _selectedRoom != null) {
@@ -48,7 +49,7 @@ class _RegisterPageState extends State<RegisterPage> {
         }
 
         await _firestore
-            .collection(_selectedRole == 'Student' ? 'Students' : 'Teachers')
+            .collection('users')
             .doc(userCredential.user?.uid)
             .set(userData);
 
