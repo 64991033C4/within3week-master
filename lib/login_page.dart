@@ -62,11 +62,10 @@ class _LoginPageState extends State<LoginPage> {
         });
 
         // Navigate to the appropriate role page
-        Navigator.pushReplacement(
+        Navigator.pushReplacementNamed(
           context,
-          MaterialPageRoute(
-            builder: (context) => Journey(role: _role),
-          ),
+          '/journey',
+          arguments: Journey(role: _role),
         );
       } catch (e) {
         setState(() {
