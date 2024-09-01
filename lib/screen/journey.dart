@@ -22,9 +22,7 @@ class _JourneyState extends State<Journey> {
 
   Future<void> _getUserRole() async {
     final user = FirebaseAuth.instance.currentUser;
-    print(user);
     if (user != null) {
-      print('called');
       final email = user.email?.toLowerCase();
       setState(() {
         _userEmail = email ?? 'Guest';
