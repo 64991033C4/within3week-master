@@ -68,6 +68,7 @@ class _StudentWidgetState extends State<StudentWidget> {
         description: data['description'] ?? '',
         room: data['room'] ?? '',
         date: (data['date'] as Timestamp).toDate(),
+        creator: data['creator'] ?? ''
       );
     }).toList();
 

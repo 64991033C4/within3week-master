@@ -76,11 +76,13 @@ class Event {
   final String description;
   final String room;
   final DateTime date;
+  final String creator;
 
   Event({
     required this.title,
     required this.description,
     required this.room,
     required this.date,
+    required this.creator
   });
 }
