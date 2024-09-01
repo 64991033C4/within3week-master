@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
         '/intro': (context) => IntroPage(), // Add route for IntroPage
         '/login': (context) => LoginPage(),
         '/register': (context) => RegisterPage(),
-        '/journey': (context) => Journey(role: 'Anonymous'),
+        '/journey': (context) => Journey(),
       },
     );
   }

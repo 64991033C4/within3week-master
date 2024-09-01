@@ -5,28 +5,80 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../components/student_widget.dart';
 import '../components/teacher_widget.dart';
 
-// Main Journey Class
-class Journey extends StatelessWidget {
-  final String role;
+class Journey extends StatefulWidget {
+  @override
+  _JourneyState createState() => _JourneyState();
+}
 
-  const Journey({Key? key, required this.role}) : super(key: key);
+class _JourneyState extends State<Journey> {
+  String _role = 'Anonymous';
+  String _userEmail = 'Guest';
+
+  @override
+  void initState() {
+    super.initState();
+    _getUserRole();
+  }
+
+  Future<void> _getUserRole() async {
+    final user = FirebaseAuth.instance.currentUser;
+    print(user);
+    if (user != null) {
+      print('called');
+      final email = user.email?.toLowerCase();
+      setState(() {
+        _userEmail = email ?? 'Guest';
+      });
+
+      final firestore = FirebaseFirestore.instance;
+
+      final studentDoc = await firestore
+          .collection('Students')
+          .where('email', isEqualTo: email)
+          .limit(1)
+          .get();
+
+      if (studentDoc.docs.isNotEmpty) {
+        setState(() {
+          _role = 'Student';
+        });
+      } else {
+        final teacherDoc = await firestore
+            .collection('Teachers')
+            .where('email', isEqualTo: email)
+            .limit(1)
+            .get();
+
+        if (teacherDoc.docs.isNotEmpty) {
+          setState(() {
+            _role = 'Teacher';
+          });
+        } else {
+          setState(() {
+            _role = 'Anonymous';
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+                content: Text('User role not found. Please contact support.')),
+          );
+        }
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
-    final userEmail = user?.email ?? 'Guest';
-
     Widget roleSpecificWidget;
 
-    switch (role) {
+    switch (_role) {
       case 'Student':
-        roleSpecificWidget = StudentWidget(userEmail: userEmail);
+        roleSpecificWidget = StudentWidget(userEmail: _userEmail);
         break;
       case 'Teacher':
-        roleSpecificWidget = TeacherWidget(userEmail: userEmail);
+        roleSpecificWidget = TeacherWidget(userEmail: _userEmail);
         break;
       default:
-        roleSpecificWidget = DefaultWidget(); // Fallback in case of an unknown role
+        roleSpecificWidget = DefaultWidget();
     }
 
     return Scaffold(
@@ -34,9 +86,9 @@ class Journey extends StatelessWidget {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('$role Journey'),
+            Text('$_role Journey'),
             Text(
-              userEmail,
+              _userEmail,
               style: TextStyle(fontSize: 14, fontStyle: FontStyle.italic),
             ),
           ],
@@ -62,7 +114,6 @@ class Journey extends StatelessWidget {
   }
 }
 
-// DefaultWidget Class
 class DefaultWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

@@ -32,31 +32,6 @@ class _LoginPageState extends State<LoginPage> {
           password: password,
         );
 
-        // Retrieve the role from Firestore
-        final userDoc = await _firestore
-            .collection('Students')
-            .where('email', isEqualTo: email.toLowerCase()) // "CHATMETHAR" != "chatmethar"
-            .limit(1)
-            .get();
-
-        if (userDoc.docs.isNotEmpty) {
-          _role = 'Student';
-        } else {
-          final teacherDoc = await _firestore
-              .collection('Teachers')
-              .where('email', isEqualTo: email)
-              .limit(1)
-              .get();
-          if (teacherDoc.docs.isNotEmpty) {
-            _role = 'Teacher';
-          }
-        }
-
-        if (_role == 'Anonymous') {
-          // Handle the error when no role is found
-          throw Exception('User role not found. Please contact support.');
-        }
-
         setState(() {
           _displayedEmail = email;
         });
@@ -65,7 +40,7 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.pushReplacementNamed(
           context,
           '/journey',
-          arguments: Journey(role: _role),
+          arguments: Journey(),
         );
       } catch (e) {
         setState(() {
