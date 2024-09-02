@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:within3week/screen/journey.dart';
 
 class IntroPage extends StatelessWidget {
   const IntroPage({super.key});
@@ -35,7 +37,19 @@ class IntroPage extends StatelessWidget {
             ),
             onPressed: () {
               // Handle user profile button press
-              Navigator.of(context).pushReplacementNamed('/login');
+              final user = FirebaseAuth.instance.currentUser;
+
+              if (user != null) {
+                // User is logged in, navigate to the Journey page
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  '/journey',
+                  (Route<dynamic> route) => false,
+                  arguments: Journey(),
+                ); // or 'Teacher', depending on the user's role
+              } else {
+                // User is not logged in, navigate to the LoginPage
+                Navigator.of(context).pushReplacementNamed('/login');
+              }
             },
           ),
         ],
@@ -122,6 +136,24 @@ class IntroPage extends StatelessWidget {
                     ),
                   ],
                 ),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  final user = FirebaseAuth.instance.currentUser;
+
+                  if (user != null) {
+                    // User is logged in, navigate to the Journey page
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                      '/journey',
+                      (Route<dynamic> route) => false,
+                      arguments: Journey(),
+                    ); // or 'Teacher', depending on the user's role
+                  } else {
+                    // User is not logged in, navigate to the LoginPage
+                    Navigator.of(context).pushReplacementNamed('/login');
+                  }
+                },
+                child: Text('Get Started'),
               ),
             ],
           ),
