@@ -90,7 +90,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     borderSide: BorderSide(color: Color(0xFF00ADB5)),  // Set outline color to #00ADB5
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFF00ADB5)),  // Set outline color to #00ADB5
+                    borderSide: BorderSide(color: Colors.grey),  // Set outline color to #00ADB5
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Color(0xFF00ADB5)),  // Set outline color to #00ADB5
@@ -121,7 +121,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     borderSide: BorderSide(color: Color(0xFF00ADB5)),  // Set outline color to #00ADB5
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFF00ADB5)),  // Set outline color to #00ADB5
+                    borderSide: BorderSide(color: Colors.grey),  // Set outline color to #00ADB5
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Color(0xFF00ADB5)),  // Set outline color to #00ADB5
@@ -153,7 +153,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     borderSide: BorderSide(color: Color(0xFF00ADB5)),  // Set outline color to #00ADB5
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFF00ADB5)),  // Set outline color to #00ADB5
+                    borderSide: BorderSide(color: Colors.grey),  // Set outline color to #00ADB5
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Color(0xFF00ADB5)),  // Set outline color to #00ADB5
@@ -185,7 +185,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     borderSide: BorderSide(color: Color(0xFF00ADB5)),  // Set outline color to #00ADB5
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFF00ADB5)),  // Set outline color to #00ADB5
+                    borderSide: BorderSide(color: Colors.grey),  // Set outline color to #00ADB5
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Color(0xFF00ADB5)),  // Set outline color to #00ADB5
@@ -220,7 +220,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       borderSide: BorderSide(color: Color(0xFF00ADB5)),  // Set outline color to #00ADB5
                     ),
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFF00ADB5)),  // Set outline color to #00ADB5
+                      borderSide: BorderSide(color: Colors.grey),  // Set outline color to #00ADB5
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Color(0xFF00ADB5)),  // Set outline color to #00ADB5
