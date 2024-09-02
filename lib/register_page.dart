@@ -25,6 +25,9 @@ class _RegisterPageState extends State<RegisterPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  // Define the error text style
+  TextStyle get _errorTextStyle => TextStyle(color: Color(0xFF00ADB5));
+
   void _register() async {
     if (_formKey.currentState?.validate() ?? false) {
       final email = _emailController.text;
@@ -66,8 +69,10 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Register'),
+        title: Text('Register', style: TextStyle(color: Color(0xFFEEEEEE))),  // Set AppBar text color to #EEEEEE
+        backgroundColor: Color(0xFF222831),  // Set the AppBar color to #222831
       ),
+      backgroundColor: Color(0xFF393E46),  // Set background color to #393E46
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -77,9 +82,26 @@ class _RegisterPageState extends State<RegisterPage> {
             children: <Widget>[
               TextFormField(
                 controller: _nameController,
+                style: TextStyle(color: Color(0xFFEEEEEE)),  // Set text color to #EEEEEE
                 decoration: InputDecoration(
                   labelText: 'Name',
-                  border: OutlineInputBorder(),
+                  labelStyle: TextStyle(color: Color(0xFFEEEEEE)),  // Set label text color to #EEEEEE
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF00ADB5)),  // Set outline color to #00ADB5
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF00ADB5)),  // Set outline color to #00ADB5
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF00ADB5)),  // Set outline color to #00ADB5
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF00ADB5)),  // Set outline color to #00ADB5 when error
+                  ),
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF00ADB5)),  // Set outline color to #00ADB5 when error
+                  ),
+                  errorStyle: _errorTextStyle,  // Set error text style
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -91,9 +113,26 @@ class _RegisterPageState extends State<RegisterPage> {
               SizedBox(height: 20),
               TextFormField(
                 controller: _emailController,
+                style: TextStyle(color: Color(0xFFEEEEEE)),  // Set text color to #EEEEEE
                 decoration: InputDecoration(
                   labelText: 'Email',
-                  border: OutlineInputBorder(),
+                  labelStyle: TextStyle(color: Color(0xFFEEEEEE)),  // Set label text color to #EEEEEE
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF00ADB5)),  // Set outline color to #00ADB5
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF00ADB5)),  // Set outline color to #00ADB5
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF00ADB5)),  // Set outline color to #00ADB5
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF00ADB5)),  // Set outline color to #00ADB5 when error
+                  ),
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF00ADB5)),  // Set outline color to #00ADB5 when error
+                  ),
+                  errorStyle: _errorTextStyle,  // Set error text style
                 ),
                 keyboardType: TextInputType.emailAddress,
                 validator: (value) {
@@ -106,9 +145,26 @@ class _RegisterPageState extends State<RegisterPage> {
               SizedBox(height: 20),
               TextFormField(
                 controller: _passwordController,
+                style: TextStyle(color: Color(0xFFEEEEEE)),  // Set text color to #EEEEEE
                 decoration: InputDecoration(
                   labelText: 'Password',
-                  border: OutlineInputBorder(),
+                  labelStyle: TextStyle(color: Color(0xFFEEEEEE)),  // Set label text color to #EEEEEE
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF00ADB5)),  // Set outline color to #00ADB5
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF00ADB5)),  // Set outline color to #00ADB5
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF00ADB5)),  // Set outline color to #00ADB5
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF00ADB5)),  // Set outline color to #00ADB5 when error
+                  ),
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF00ADB5)),  // Set outline color to #00ADB5 when error
+                  ),
+                  errorStyle: _errorTextStyle,  // Set error text style
                 ),
                 obscureText: true,
                 validator: (value) {
@@ -121,55 +177,67 @@ class _RegisterPageState extends State<RegisterPage> {
               SizedBox(height: 20),
               DropdownButtonFormField<String>(
                 value: _selectedRole,
+                style: TextStyle(color: Color(0xFFEEEEEE)),  // Set dropdown text color to #EEEEEE
                 decoration: InputDecoration(
                   labelText: 'Role',
-                  border: OutlineInputBorder(),
+                  labelStyle: TextStyle(color: Color(0xFFEEEEEE)),  // Set label text color to #EEEEEE
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF00ADB5)),  // Set outline color to #00ADB5
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF00ADB5)),  // Set outline color to #00ADB5
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF00ADB5)),  // Set outline color to #00ADB5
+                  ),
+                  errorStyle: _errorTextStyle,  // Set error text style
                 ),
-                items: ['Student', 'Teacher']
-                    .map<DropdownMenuItem<String>>((String value) {
+                dropdownColor: Color(0xFF222831),  // Set dropdown menu color
+                items: ['Student', 'Teacher'].map((role) {
                   return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
+                    value: role,
+                    child: Text(role),
                   );
                 }).toList(),
-                onChanged: (String? newValue) {
+                onChanged: (value) {
                   setState(() {
-                    _selectedRole = newValue ?? 'Student';
-                    _selectedRoom = null; // Reset room selection if role changes
+                    _selectedRole = value!;
+                    if (_selectedRole != 'Student') {
+                      _selectedRoom = null;  // Reset room if role is not Student
+                    }
                   });
-                },
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please select your role';
-                  }
-                  return null;
                 },
               ),
               if (_selectedRole == 'Student') ...[
                 SizedBox(height: 20),
                 DropdownButtonFormField<String>(
                   value: _selectedRoom,
+                  style: TextStyle(color: Color(0xFFEEEEEE)),  // Set dropdown text color to #EEEEEE
                   decoration: InputDecoration(
                     labelText: 'Room',
-                    border: OutlineInputBorder(),
+                    labelStyle: TextStyle(color: Color(0xFFEEEEEE)),  // Set label text color to #EEEEEE
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Color(0xFF00ADB5)),  // Set outline color to #00ADB5
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Color(0xFF00ADB5)),  // Set outline color to #00ADB5
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Color(0xFF00ADB5)),  // Set outline color to #00ADB5
+                    ),
+                    errorStyle: _errorTextStyle,  // Set error text style
                   ),
-                  items: _rooms
-                      .map<DropdownMenuItem<String>>((String value) {
+                  dropdownColor: Color(0xFF222831),  // Set dropdown menu color
+                  items: _rooms.map((room) {
                     return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
+                      value: room,
+                      child: Text(room),
                     );
                   }).toList(),
-                  onChanged: (String? newValue) {
+                  onChanged: (value) {
                     setState(() {
-                      _selectedRoom = newValue;
+                      _selectedRoom = value;
                     });
-                  },
-                  validator: (value) {
-                    if (_selectedRole == 'Student' && value == null) {
-                      return 'Please select your room';
-                    }
-                    return null;
                   },
                 ),
               ],
@@ -177,12 +245,10 @@ class _RegisterPageState extends State<RegisterPage> {
               ElevatedButton(
                 onPressed: _register,
                 child: Text('Register'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text('Already have an account? Login here.'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF00ADB5),  // Set button color to #00ADB5
+                  foregroundColor: Colors.white,  // Set text color to white
+                ),
               ),
             ],
           ),
