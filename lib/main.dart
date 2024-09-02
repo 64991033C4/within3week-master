@@ -4,10 +4,13 @@ import 'intro_page.dart'; // Import the IntroPage class
 import 'login_page.dart';
 import 'register_page.dart';
 import 'screen/journey.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(MyApp());
 }
 
