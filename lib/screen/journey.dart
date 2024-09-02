@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../components/student_widget.dart';
 import '../components/teacher_widget.dart';
+import '../components/teacher_event_widget.dart';
 
 class Journey extends StatefulWidget {
   @override
@@ -61,7 +62,7 @@ class _JourneyState extends State<Journey> {
         roleSpecificWidget = StudentWidget(userEmail: _userEmail);
         break;
       case 'Teacher':
-        roleSpecificWidget = TeacherWidget(userEmail: _userEmail);
+        roleSpecificWidget = TeacherEventPage(userEmail: _userEmail);
         break;
       default:
         roleSpecificWidget = DefaultWidget();
@@ -70,19 +71,21 @@ class _JourneyState extends State<Journey> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-            icon: Icon(Icons.home),
-            onPressed: () {
-              Navigator.pushReplacementNamed(context, '/intro');
-            },
-          ),
+          icon: Icon(Icons.home),
+          onPressed: () {
+            Navigator.pushReplacementNamed(context, '/intro');
+          },
+        ),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Center(child: Text('$_role')),
-            Center(child: Text(
-              _userEmail,
-              style: TextStyle(fontSize: 14, fontStyle: FontStyle.italic),
-            ),)
+            Center(
+              child: Text(
+                _userEmail,
+                style: TextStyle(fontSize: 14, fontStyle: FontStyle.italic),
+              ),
+            ),
           ],
         ),
         actions: [
@@ -104,6 +107,7 @@ class _JourneyState extends State<Journey> {
       body: roleSpecificWidget,
     );
   }
+
 }
 
 class DefaultWidget extends StatelessWidget {
