@@ -191,31 +191,36 @@ class _IntroPageState extends State<IntroPage> with SingleTickerProviderStateMix
                       ],
                     ),
                   ),
-                  const SizedBox(height: 60), // Added space to ensure the button is visible
+                  const SizedBox(height: 20), // Added space to ensure the button is visible
                 ],
               ),
             ),
           ),
-          Positioned(
-            bottom: 20.0,
-            left: 15.0,
-            right: 15.0,
-            child: ElevatedButton(
-              onPressed: () => _handleNavigation(context),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF00ADB5), // Button color
-                foregroundColor: const Color(0xFFEEEEEE), // Text color
-                padding: const EdgeInsets.symmetric(vertical: 15.0),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-              ),
-              child: const Text(
-                'Get Started',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-            ),
+          Align(
+  alignment: Alignment.bottomCenter,
+  child: Padding(
+    padding: const EdgeInsets.all(15.0),
+    child: SizedBox(
+      width: 200.0, // Set your desired width here
+      child: TextButton(
+        onPressed: () => _handleNavigation(context),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFF00ADB5), // Button color
+          foregroundColor: const Color(0xFFEEEEEE), // Text color
+          padding: const EdgeInsets.symmetric(vertical: 15.0), // Adjust padding as needed
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(6.0), // Border radius
           ),
+        ),
+        child: const Text(
+          'Get Started',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold), // Font size
+        ),
+      ),
+    ),
+  ),
+),
+
         ],
       ),
     );
