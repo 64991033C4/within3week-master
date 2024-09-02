@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:within3week/components/teacher_event_widget.dart';
 
 class TeacherWidget extends StatefulWidget {
   final String userEmail;
@@ -52,6 +53,12 @@ class _TeacherWidgetState extends State<TeacherWidget> {
 
       _titleController.clear();
       _descriptionController.clear();
+      // Navigator.pop(context, true);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => TeacherEventPage(userEmail: widget.userEmail)),
+      );
       setState(() {
         _selectedRoom = _rooms[0]; // Reset to default value
         _selectedDate = DateTime.now();
