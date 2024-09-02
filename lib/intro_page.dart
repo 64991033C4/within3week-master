@@ -3,161 +3,220 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:within3week/screen/journey.dart';
 
-class IntroPage extends StatelessWidget {
+class IntroPage extends StatefulWidget {
   const IntroPage({super.key});
+
+  @override
+  _IntroPageState createState() => _IntroPageState();
+}
+
+class _IntroPageState extends State<IntroPage> with SingleTickerProviderStateMixin {
+  AnimationController? _controller;
+  Animation<double>? _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    )..addListener(() {
+        setState(() {});
+      });
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(_controller!);
+  }
+
+  @override
+  void dispose() {
+    _controller?.dispose();
+    super.dispose();
+  }
+
+  void _handleMouseEnter() {
+    _controller?.forward();
+  }
+
+  void _handleMouseExit() {
+    _controller?.reverse();
+  }
+
+  void _handleNavigation(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      Navigator.of(context).pushNamedAndRemoveUntil(
+        '/journey',
+        (Route<dynamic> route) => false,
+        arguments: Journey(),
+      );
+    } else {
+      Navigator.of(context).pushReplacementNamed('/login');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     const LatLng kosenkmitl = LatLng(13.72699, 100.7789);
 
     return Scaffold(
+      backgroundColor: const Color(0xFF393E46), // Background color
       appBar: AppBar(
+        backgroundColor: const Color(0xFF222831), // AppBar color
         title: const Text(
           'Event Subscriber Service',
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFFEEEEEE), // Title text color
+          ),
         ),
         actions: [
-          IconButton(
-            icon: Container(
-              margin: const EdgeInsets.all(5.0),
-              width: 35.0,
-              height: 35.0,
-              decoration: BoxDecoration(
-                color: Colors.transparent,
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: Colors.grey,
-                  width: 2.0,
+          MouseRegion(
+            onEnter: (_) => _handleMouseEnter(),
+            onExit: (_) => _handleMouseExit(),
+            child: Transform.scale(
+              scale: _scaleAnimation?.value ?? 1.0,
+              child: IconButton(
+                icon: Container(
+                  margin: const EdgeInsets.all(5.0),
+                  width: 35.0,
+                  height: 35.0,
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: Colors.grey,
+                      width: 2.0,
+                    ),
+                  ),
+                  child: Icon(
+                    Icons.notifications, // Bell icon
+                    color: const Color(0xFF00ADB5), // Icon color
+                  ),
                 ),
-              ),
-              child: const Icon(
-                Icons.person,
-                color: Colors.grey,
+                onPressed: () => _handleNavigation(context),
               ),
             ),
-            onPressed: () {
-              // Handle user profile button press
-              final user = FirebaseAuth.instance.currentUser;
-
-              if (user != null) {
-                // User is logged in, navigate to the Journey page
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                  '/journey',
-                  (Route<dynamic> route) => false,
-                  arguments: Journey(),
-                ); // or 'Teacher', depending on the user's role
-              } else {
-                // User is not logged in, navigate to the LoginPage
-                Navigator.of(context).pushReplacementNamed('/login');
-              }
-            },
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              const Center(
-                child: Column(
-                  children: <Widget>[
-                    Text(
-                      '       KOSEN-KMITL is an educational institution that was established according to '
-                      'the project to develop manpower in engineering, technology, and innovation. '
-                      'Divided into three branches: ',
-                      style: TextStyle(fontSize: 16),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    'KOSEN-KMITL is an educational institution that was established according to '
+                    'the project to develop manpower in engineering, technology, and innovation. '
+                    'Divided into three branches: ',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Color(0xFFEEEEEE), // Text color
                     ),
-                    SizedBox(height: 10),
-                    Text(
-                      '• Mechatronics Engineering',
-                      style: TextStyle(fontSize: 16),
-                      textAlign: TextAlign.center,
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    '• Mechatronics Engineering',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Color(0xFFEEEEEE), // Text color
                     ),
-                    Text(
-                      '• Computer Engineering',
-                      style: TextStyle(fontSize: 16),
-                      textAlign: TextAlign.center,
+                    textAlign: TextAlign.center,
+                  ),
+                  Text(
+                    '• Computer Engineering',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Color(0xFFEEEEEE), // Text color
                     ),
-                    Text(
-                      '• Electrical Engineering and Electronic Engineering',
-                      style: TextStyle(fontSize: 16),
-                      textAlign: TextAlign.center,
+                    textAlign: TextAlign.center,
+                  ),
+                  Text(
+                    '• Electrical Engineering and Electronic Engineering',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Color(0xFFEEEEEE), // Text color
                     ),
-                    SizedBox(height: 15),
-                  ],
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.all(15.0),
-                padding: const EdgeInsets.all(15.0),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 5,
-                      blurRadius: 7,
-                      offset: const Offset(0, 3),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 15),
+                  Container(
+                    margin: const EdgeInsets.all(15.0),
+                    padding: const EdgeInsets.all(15.0),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF222831), // Container color
+                      borderRadius: BorderRadius.circular(8.0),
+                      // Removed boxShadow to eliminate white shadow
                     ),
-                  ],
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    const Text(
-                      'KOSEN-KMITL Location',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    const SizedBox(height: 20),
-                    SizedBox(
-                      height: 300,
-                      width: double.infinity,
-                      child: GoogleMap(
-                        initialCameraPosition: const CameraPosition(
-                          target: kosenkmitl,
-                          zoom: 15,
-                        ),
-                        markers: {
-                          const Marker(
-                            markerId: MarkerId('KosenKmitl'),
-                            position: kosenkmitl,
-                            infoWindow: InfoWindow(title: 'KOSEN-KMITL'),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Text(
+                          'KOSEN-KMITL Location',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Color(0xFFEEEEEE), // Text color
                           ),
-                        },
-                      ),
+                        ),
+                        const SizedBox(height: 20),
+                        SizedBox(
+                          height: 300,
+                          width: double.infinity,
+                          child: GoogleMap(
+                            initialCameraPosition: const CameraPosition(
+                              target: kosenkmitl,
+                              zoom: 15,
+                            ),
+                            markers: {
+                              Marker(
+                                markerId: const MarkerId('KosenKmitl'),
+                                position: kosenkmitl,
+                                infoWindow:
+                                    const InfoWindow(title: 'KOSEN-KMITL'),
+                              ),
+                            },
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          'Coordinates: 13.72699, 100.7789',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Color(0xFFEEEEEE), // Text color
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 10),
-                    const Text(
-                      'Coordinates: 13.72699, 100.7789',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  ],
+                  ),
+                  const SizedBox(height: 60), // Added space to ensure the button is visible
+                ],
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 20.0,
+            left: 15.0,
+            right: 15.0,
+            child: ElevatedButton(
+              onPressed: () => _handleNavigation(context),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF00ADB5), // Button color
+                foregroundColor: const Color(0xFFEEEEEE), // Text color
+                padding: const EdgeInsets.symmetric(vertical: 15.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
                 ),
               ),
-              ElevatedButton(
-                onPressed: () async {
-                  final user = FirebaseAuth.instance.currentUser;
-
-                  if (user != null) {
-                    // User is logged in, navigate to the Journey page
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                      '/journey',
-                      (Route<dynamic> route) => false,
-                      arguments: Journey(),
-                    ); // or 'Teacher', depending on the user's role
-                  } else {
-                    // User is not logged in, navigate to the LoginPage
-                    Navigator.of(context).pushReplacementNamed('/login');
-                  }
-                },
-                child: Text('Get Started'),
+              child: const Text(
+                'Get Started',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
