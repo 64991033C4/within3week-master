@@ -61,7 +61,6 @@ class _StudentWidgetState extends State<StudentWidget> {
         .where('room', isEqualTo: _studentRoom)
         .get();
 
-
     final events = await Future.wait(snapshot.docs.map((doc) async {
       final data = doc.data();
 
@@ -87,100 +86,109 @@ class _StudentWidgetState extends State<StudentWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TableCalendar<Event>(
-          firstDay: DateTime.utc(2020, 1, 1),
-          lastDay: DateTime.utc(2030, 12, 31),
-          focusedDay: _focusedDay,
-          selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-          onDaySelected: (selectedDay, focusedDay) {
-            if (!isSameDay(_selectedDay, selectedDay)) {
-              setState(() {
-                _selectedDay = selectedDay;
-                _focusedDay = focusedDay;
-                _fetchEventsForDay(
-                    selectedDay); // Fetch events for the new selected day
-              });
-            }
-          },
-          calendarFormat: _calendarFormat,
-          onFormatChanged: (format) {
-            setState(() {
-              _calendarFormat = format;
-            });
-          },
-          eventLoader: (day) => [], // Return an empty list to hide dots
-          headerStyle: HeaderStyle(
-            formatButtonVisible: false,
-          ),
-          calendarStyle: CalendarStyle(
-            todayDecoration: BoxDecoration(
-              color: Colors.blue,
-              shape: BoxShape.circle,
-            ),
-            selectedDecoration: BoxDecoration(
-              color: Colors.orange,
-              shape: BoxShape.circle,
-            ),
-            // Hide dots
-            markersMaxCount: 0,
-            markerDecoration: BoxDecoration(
-              color: Colors.transparent,
-            ),
-          ),
-        ),
-        Expanded(
-          child: ValueListenableBuilder<List<Event>>(
-            valueListenable: _selectedEvents,
-            builder: (context, events, _) {
-              return ListView(
-                children: events.map((event) {
-                  return Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    elevation: 2,
-                    margin:
-                        EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0),
-                    child: ListTile(
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 4.0, horizontal: 12.0),
-                      title: Text(
-                        event.title,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            event.description,
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          Text(
-                            '${event.creator}',
-                            style: TextStyle(color: Colors.grey[600]),
-                          ),
-                        ],
-                      ),
-                      leading: CircleAvatar(
-                        child: Icon(Icons.event),
-                        backgroundColor: Theme.of(context).primaryColor,
-                        foregroundColor: Colors.white,
-                      ),
-                      onTap: () {
-                        // Empty function for now
-                      },
-                    ),
-                  );
-                }).toList(),
-              );
+    return Container(
+      color: Color(0xFF393E46), // Set the background color
+      child: Column(
+        children: [
+          TableCalendar<Event>(
+            firstDay: DateTime.utc(2020, 1, 1),
+            lastDay: DateTime.utc(2030, 12, 31),
+            focusedDay: _focusedDay,
+            selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+            onDaySelected: (selectedDay, focusedDay) {
+              if (!isSameDay(_selectedDay, selectedDay)) {
+                setState(() {
+                  _selectedDay = selectedDay;
+                  _focusedDay = focusedDay;
+                  _fetchEventsForDay(
+                      selectedDay); // Fetch events for the new selected day
+                });
+              }
             },
+            calendarFormat: _calendarFormat,
+            onFormatChanged: (format) {
+              setState(() {
+                _calendarFormat = format;
+              });
+            },
+            eventLoader: (day) => [], // Return an empty list to hide dots
+            headerStyle: HeaderStyle(
+              formatButtonVisible: false,
+              titleTextStyle: TextStyle(color: Color(0xFFEEEEEE)), // Set the header title text color
+              leftChevronIcon: Icon(Icons.chevron_left, color: Color(0xFFEEEEEE)),
+              rightChevronIcon: Icon(Icons.chevron_right, color: Color(0xFFEEEEEE)),
+              headerPadding: EdgeInsets.symmetric(vertical: 8.0),
+            ),
+            calendarStyle: CalendarStyle(
+              todayDecoration: BoxDecoration(
+                color: Colors.blue,
+                shape: BoxShape.circle,
+              ),
+              selectedDecoration: BoxDecoration(
+                color: Colors.orange,
+                shape: BoxShape.circle,
+              ),
+              // Hide dots
+              markersMaxCount: 0,
+              markerDecoration: BoxDecoration(
+                color: Colors.transparent,
+              ),
+              defaultTextStyle: TextStyle(color: Color(0xFFEEEEEE)), // Set the default weekday text color
+              weekendTextStyle: TextStyle(color: Color(0xFFEEEEEE)), // Set the weekend text color
+              todayTextStyle: TextStyle(color: Color(0xFFEEEEEE)), // Set the today's text color
+              selectedTextStyle: TextStyle(color: Color(0xFFEEEEEE)), // Set the selected day text color
+            ),
           ),
-
-        ),
-      ],
+          Expanded(
+            child: ValueListenableBuilder<List<Event>>(
+              valueListenable: _selectedEvents,
+              builder: (context, events, _) {
+                return ListView(
+                  children: events.map((event) {
+                    return Card(
+                      color: Color(0xFF00ADB5), // Set the card background color
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      elevation: 2,
+                      margin: EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0),
+                      child: ListTile(
+                        contentPadding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 12.0),
+                        title: Text(
+                          event.title,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xFFEEEEEE)), // Set the title text color
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              event.description,
+                              style: TextStyle(fontSize: 16, color: Color(0xFFEEEEEE)), // Set the description text color
+                            ),
+                            Text(
+                              '${event.creator}',
+                              style: TextStyle(color: Color(0xFFEEEEEE)), // Set the creator text color
+                            ),
+                          ],
+                        ),
+                        leading: CircleAvatar(
+                          child: Icon(Icons.event),
+                          backgroundColor: Color(0xFF393E46),
+                          foregroundColor: Colors.white,
+                        ),
+                        onTap: () {
+                          // Empty function for now
+                        },
+                      ),
+                    );
+                  }).toList(),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

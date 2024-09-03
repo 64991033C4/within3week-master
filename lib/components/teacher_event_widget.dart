@@ -73,8 +73,14 @@ class _TeacherEventPageState extends State<TeacherEventPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFF393E46), // Set the background color here
       appBar: AppBar(
-        title: Text('Upcoming Scheduled Event'),
+        backgroundColor: Color(0xFF393E46), // Set the AppBar color
+        iconTheme: IconThemeData(color: Color(0xFFEEEEEE)), // Set icon color
+        title: Text(
+          'Upcoming Scheduled Event',
+          style: TextStyle(color: Color(0xFFEEEEEE)), // Set text color
+        ),
         actions: [
           IconButton(
             icon: Icon(Icons.add),
@@ -95,6 +101,7 @@ class _TeacherEventPageState extends State<TeacherEventPage> {
           return ListView(
             children: events.map((event) {
               return Card(
+                color: Color(0xFF00ADB5), // Set the card background color here
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0),
                 ),
@@ -105,28 +112,33 @@ class _TeacherEventPageState extends State<TeacherEventPage> {
                       EdgeInsets.symmetric(vertical: 4.0, horizontal: 12.0),
                   title: Text(
                     event.title,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: Color(0xFFEEEEEE)), // Set text color
                   ),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         event.description,
-                        style: TextStyle(fontSize: 16),
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Color(0xFFEEEEEE)), // Set text color
                       ),
                       Text(
                         '${event.room}',
-                        style: TextStyle(color: Colors.grey[600]),
+                        style: TextStyle(
+                            color: Color(0xFFEEEEEE)), // Set text color
                       ),
                     ],
                   ),
                   leading: CircleAvatar(
-                    child: Icon(Icons.event),
-                    backgroundColor: Theme.of(context).primaryColor,
-                    foregroundColor: Colors.white,
+                    child: Icon(Icons.event, color: Color(0xFFEEEEEE)), // Set icon color to #EEEEEE
+                    backgroundColor: Color(0xFF393E46), // Set background color to #393E46
                   ),
                   trailing: IconButton(
-                    icon: Icon(Icons.delete),
+                    icon: Icon(Icons.delete, color: Color(0xFFEEEEEE)), // Set icon color to #EEEEEE
                     onPressed: () {
                       _deleteEvent(event.id);
                     },
@@ -162,7 +174,6 @@ class Event {
   });
 }
 
-
 // Replace this with your existing AddEventPage
 class AddEventPage extends StatelessWidget {
   final String userEmail;
@@ -174,8 +185,11 @@ class AddEventPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Add Event'),
+        backgroundColor: Color(0xFF393E46), // Set the AppBar color
+        iconTheme: IconThemeData(color: Color(0xFFEEEEEE)), // Set icon color
+        titleTextStyle: TextStyle(color: Color(0xFFEEEEEE)), // Set text color
       ),
-      body: TeacherWidget(userEmail: userEmail)
+      body: TeacherWidget(userEmail: userEmail),
     );
   }
 }

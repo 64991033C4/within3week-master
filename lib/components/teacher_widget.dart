@@ -31,7 +31,6 @@ class _TeacherWidgetState extends State<TeacherWidget> {
   ];
 
   Future<void> _addEvent() async {
-
     final userDoc = await firestore
       .collection('users')
       .where('email', isEqualTo: widget.userEmail)
@@ -48,12 +47,11 @@ class _TeacherWidgetState extends State<TeacherWidget> {
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Event added successfully')),
+        SnackBar(content: Text('Event added successfully', style: TextStyle(color: Color(0xFFEEEEEE)))),
       );
 
       _titleController.clear();
       _descriptionController.clear();
-      // Navigator.pop(context, true);
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -67,88 +65,116 @@ class _TeacherWidgetState extends State<TeacherWidget> {
   }
 
   @override
-    Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextFormField(
-              controller: _titleController,
-              decoration: InputDecoration(labelText: 'Event Title'),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter a title';
-                }
-                return null;
-              },
-            ),
-            TextFormField(
-              controller: _descriptionController,
-              decoration: InputDecoration(labelText: 'Event Description'),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter a description';
-                }
-                return null;
-              },
-            ),
-            SizedBox(height: 20),
-            DropdownButtonFormField<String>(
-              value: _selectedRoom,
-              decoration: InputDecoration(labelText: 'Room'),
-              items: _rooms.map((room) {
-                return DropdownMenuItem<String>(
-                  value: room,
-                  child: Text(room),
-                );
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  _selectedRoom = value!;
-                });
-              },
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please select a room';
-                }
-                return null;
-              },
-            ),
-            SizedBox(height: 20),
-            Row(
-              children: [
-                Text(
-                  'Selected Date: ${_selectedDate.toLocal().toString().split(' ')[0]}',
-                  style: TextStyle(fontSize: 16),
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Color(0xFF393E46), // Set the background color here
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextFormField(
+                controller: _titleController,
+                decoration: InputDecoration(
+                  labelText: 'Event Title',
+                  labelStyle: TextStyle(color: Color(0xFFEEEEEE)),
+                  filled: true,
+                  fillColor: Color(0xFF393E46),
                 ),
-                Spacer(),
-                TextButton(
-                  onPressed: () async {
-                    final selectedDate = await showDatePicker(
-                      context: context,
-                      initialDate: _selectedDate,
-                      firstDate: DateTime(2000),
-                      lastDate: DateTime(2101),
-                    );
-                    if (selectedDate != null && selectedDate != _selectedDate) {
-                      setState(() {
-                        _selectedDate = selectedDate;
-                      });
-                    }
-                  },
-                  child: Text('Select date'),
+                style: TextStyle(color: Color(0xFFEEEEEE)),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a title';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: _descriptionController,
+                decoration: InputDecoration(
+                  labelText: 'Event Description',
+                  labelStyle: TextStyle(color: Color(0xFFEEEEEE)),
+                  filled: true,
+                  fillColor: Color(0xFF393E46),
                 ),
-              ],
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _addEvent,
-              child: Text('Add Event'),
-            ),
-          ],
+                style: TextStyle(color: Color(0xFFEEEEEE)),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a description';
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: 20),
+              DropdownButtonFormField<String>(
+                value: _selectedRoom,
+                decoration: InputDecoration(
+                  labelText: 'Room',
+                  labelStyle: TextStyle(color: Color(0xFFEEEEEE)),
+                  filled: true,
+                  fillColor: Color(0xFF393E46),
+                ),
+                style: TextStyle(color: Color(0xFFEEEEEE)),
+                dropdownColor: Color(0xFF393E46), // Set dropdown background color
+                items: _rooms.map((room) {
+                  return DropdownMenuItem<String>(
+                    value: room,
+                    child: Text(room, style: TextStyle(color: Color(0xFFEEEEEE))),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedRoom = value!;
+                  });
+                },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please select a room';
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: 20),
+              Row(
+                children: [
+                  Text(
+                    'Selected Date: ${_selectedDate.toLocal().toString().split(' ')[0]}',
+                    style: TextStyle(fontSize: 16, color: Color(0xFFEEEEEE)),
+                  ),
+                  Spacer(),
+                  TextButton(
+                    onPressed: () async {
+                      final selectedDate = await showDatePicker(
+                        context: context,
+                        initialDate: _selectedDate,
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2101),
+                      );
+                      if (selectedDate != null && selectedDate != _selectedDate) {
+                        setState(() {
+                          _selectedDate = selectedDate;
+                        });
+                      }
+                    },
+                    child: Text('Select date', style: TextStyle(color: Color(0xFFEEEEEE))),
+                    style: TextButton.styleFrom(
+                      backgroundColor: Color(0xFF393E46), // Set button background color
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _addEvent,
+                child: Text('Add Event', style: TextStyle(color: Color(0xFFEEEEEE))),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF00ADB5), // Set button color
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -161,5 +187,3 @@ class _TeacherWidgetState extends State<TeacherWidget> {
     super.dispose();
   }
 }
-
-       
